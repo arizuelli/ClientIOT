@@ -101,7 +101,7 @@ void colors(ColorData *colorData) {
             start = end; // Reset start time
         }
     }
-
+    close(i2c_fd); // Close the file descriptor
     //exit_handler(1); // Call exit handler function
 }
 

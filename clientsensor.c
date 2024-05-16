@@ -13,7 +13,7 @@
 
 #define WRITE_BUF_SIZE     1500
 #define BUF_SIZE           256
-#define SERVER_IP          "192.168.1.41"
+#define SERVER_IP          "192.168.1.44"
 #define PORT               8888
 
 #define BUFFER_SIZE        1024

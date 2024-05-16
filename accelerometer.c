@@ -11,7 +11,6 @@ void stop_acc_measurements(int signum) {
 // Function to read acceleration data
 void acceleration() {
     unsigned char rd_buf[6]; // Buffer to store data read from sensor
-    char write_buf[1500]; // Buffer for writing data
 
     // Open the I2C bus
     fd = open(I2C_BUS, O_RDWR);
@@ -51,18 +50,18 @@ void acceleration() {
         // Process the data
         atomic_exchange(&acc_data_ready, 0); // Reset data ready flag
         // Extract acceleration values from the read buffer
-        short ax = (rd_buf[0] << 8) | rd_buf[1];
-        short ay = (rd_buf[2] << 8) | rd_buf[3];
-        short az = (rd_buf[4] << 8) | rd_buf[5];
+        ax = (rd_buf[0] << 8) | rd_buf[1];
+        ay = (rd_buf[2] << 8) | rd_buf[3];
+        az = (rd_buf[4] << 8) | rd_buf[5];
         // Convert raw values to acceleration in g
-        float ax_g = (float)ax / 16384.0;
-        float ay_g = (float)ay / 16384.0;
-        float az_g = (float)az / 16384.0;
+        ax = (signed short)ax / 16384.0;
+        ay = (signed short)ay / 16384.0;
+        az = (signed short)az / 16384.0;
 
         // Send data to main
-        sprintf(write_buf, "%f %f %f", ax_g, ay_g, az_g); // Format data as string
         atomic_exchange(&acc_data_ready, 1); // Set data ready flag
     }
+    close(fd); // Close the file descriptor
 }
 
 // Function to write to accelerometer registers
@@ -116,4 +115,5 @@ void read_acceleration(int file, unsigned char* buf) {
     // Perform the I2C transaction
     ioctl(file, I2C_RDWR, &ioctl_data);
 }
+
 
